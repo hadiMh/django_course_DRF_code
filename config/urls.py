@@ -22,6 +22,7 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path('foods/', include('foods.urls')),
     path('drinks/', include('drinks.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 # codingyar.com/store/
