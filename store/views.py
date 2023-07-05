@@ -13,3 +13,8 @@ def say_123(request):
 
 def welcome_message(request):
     return HttpResponse('Welcome to the store')
+
+def something(request, num):
+    print(num)
+    print(type(num))
+    return HttpResponse('something')
