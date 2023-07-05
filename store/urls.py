@@ -1,11 +1,9 @@
 from django.urls import path
-from .views import say_hello
+from . import views
 
 urlpatterns = [
-    path('hello/', say_hello),
+    path('', views.welcome_message),
+    path('hello/', views.say_hello),
+    path('bye/', views.say_bye),
+    path('123/', views.say_123),
 ]
-
-# codingyar.com/store/
-# codingyar.com/store/a/bcd
-# codingyar.com/store/123
-# codingyar.com/store/hello/
