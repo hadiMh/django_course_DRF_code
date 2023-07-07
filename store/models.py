@@ -21,4 +21,4 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=255)
     email = models.EmailField()
     phone_number = models.CharField(max_length=255)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null=True, blank=True)
