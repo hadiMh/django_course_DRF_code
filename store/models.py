@@ -6,6 +6,11 @@ class Category(models.Model):
     description = models.CharField(max_length=500, blank=True)
 
 
+class Discount(models.Model):
+    discount = models.FloatField()
+    description = models.CharField(max_length=255)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
@@ -15,6 +20,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
+    discounts = models.ManyToManyField(Discount, blank=True)
 
 
 class Customer(models.Model):
