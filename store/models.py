@@ -17,7 +17,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
     slug = models.SlugField()
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
