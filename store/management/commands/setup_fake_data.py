@@ -65,7 +65,7 @@ class Command(BaseCommand):
 
         # Customers data
         print(f"Adding {NUM_CUSTOMERS} customers...", end='')
-        all_customers = [CustomerFactory() for _ in range(NUM_CUSTOMERS)]
+        all_customers = [(CustomerFactory() if (random.random() > 0.3) else CustomerFactory(birth_date=None)) for _ in range(NUM_CUSTOMERS) ]
         print('DONE')
 
         # Addresses data
