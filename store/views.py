@@ -1,19 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def say_hello(request, name):
-    return render(request, 'hello.html', {'name': name})
+from .models import Product
 
-def say_bye(request):
-    return HttpResponse('Goodbye')
+def show_data(request):
+    queryset = Product.objects.filter(id=1005) # [p1]
+    print(queryset.exists())
+    # product = queryset.first()
+    # print(product.id)
+    # print(product.name)
+    # print(product.unit_price)
 
-def say_123(request):
-    return HttpResponse('This is the number of 123')
-
-def welcome_message(request):
-    return HttpResponse('Welcome to the store')
-
-def something(request, num):
-    print(num)
-    print(type(num))
-    return HttpResponse('something')
+    return render(request, 'hello.html')
