@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Count, Min, Max, Sum, Avg, F, Value, Func
+from django.db.models import F, ExpressionWrapper, DecimalField
 
 from .models import Comment, Product, Customer, OrderItem, Order
 
 def show_data(request):
-    queryset = Customer.objects.annotate(orders_count=Count('orders'))
+    queryset = Comment.approved.filter(datetime_created__year=2022).all()
     print(queryset)
     return render(request, 'hello.html')
 
