@@ -40,6 +40,11 @@ class Address(models.Model):
     street = models.CharField(max_length=255)
 
 
+class UnpaidOrderManger(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Order.ORDER_STATUS_UNPAID)
+
+
 class Order(models.Model):
     ORDER_STATUS_PAID = 'p'
     ORDER_STATUS_UNPAID = 'u'
@@ -53,6 +58,9 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='orders')
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=ORDER_STATUS, default=ORDER_STATUS_UNPAID)
+
+    objects = models.Manager()
+    unpaid_orders = UnpaidOrderManger()
 
     def __str__(self):
         return f'Order id={self.id}'
@@ -68,9 +76,9 @@ class OrderItem(models.Model):
         unique_together = [['order', 'product']]
 
 
-# class CommentManger(models.Manager):
-#     def get_approved(self):
-#         return self.get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
+class CommentManger(models.Manager):
+    def get_approved(self):
+        return self.get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
 
 
 class ApprovedCommentManager(models.Manager):
@@ -94,7 +102,7 @@ class Comment(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=COMMENT_STATUS, default=COMMENT_STATUS_WAITING)
 
-    objects = models.Manager()
+    objects = CommentManger()
     approved = ApprovedCommentManager()
 
 class Cart(models.Model):
