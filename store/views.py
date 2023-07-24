@@ -2,24 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import F, ExpressionWrapper, DecimalField
 
-from .models import Comment, Product, Customer, OrderItem, Order
+from .models import Category, Comment, Product, Customer, OrderItem, Order
 
 def show_data(request):
-    # way 1
-    Comment.objects.create(
-        name='hadi',
-        body='Django is gread. I Love IT!',
-        product_id=1,
-    )
+    # category = Category.objects.get(pk=98)
+    # category.title = 'Laptops'
+    # category.top_product_id = 3
+    # category.save()
 
-    # way 2
-    product = Product.objects.get(id=1)
-
-    new_comment = Comment()
-    new_comment.name = 'HADI'
-    new_comment.body = 'I LOVE to learn DJANGO!'
-    new_comment.product = product
-    new_comment.save()
+    Category.objects.filter(pk__in=[96,95,94]).update(title='B')
 
     return render(request, 'hello.html')
 
