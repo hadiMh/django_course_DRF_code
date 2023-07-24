@@ -5,16 +5,12 @@ from django.db import transaction
 
 from .models import Category, Comment, Product, Customer, OrderItem, Order
 
-@transaction.atomic()
-def show_data(request):
-    order = Order.objects.create(customer_id=1)
 
-    order_item1 = OrderItem.objects.create(
-        order=order,
-        product_id=1,
-        quantity=10,
-        unit_price=1000,
-    )
+def show_data(request):
+    queryset = Product.objects.all()
+    print(queryset[2:4])
+
+    list(queryset)
 
     return render(request, 'hello.html')
 
