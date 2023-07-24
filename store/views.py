@@ -5,12 +5,10 @@ from django.db.models import F, ExpressionWrapper, DecimalField
 from .models import Category, Comment, Product, Customer, OrderItem, Order
 
 def show_data(request):
-    # category = Category.objects.get(pk=98)
-    # category.title = 'Laptops'
-    # category.top_product_id = 3
-    # category.save()
+    # Category.objects.filter(pk=102).delete()
 
-    Category.objects.filter(pk__in=[96,95,94]).update(title='B')
+    cat = Category(pk=102)
+    cat.delete()
 
     return render(request, 'hello.html')
 
