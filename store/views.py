@@ -1,16 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import F, ExpressionWrapper, DecimalField
-from django.db import transaction
+from django.db import transaction, connection
 
 from .models import Category, Comment, Product, Customer, OrderItem, Order
 
 
 def show_data(request):
-    queryset = Product.objects.all()
-    print(queryset[2:4])
+    cursor = connection.cursor()
+    # cursor.execute('')
+    # cursor.close()
 
-    list(queryset)
+    # with connection.cursor() as cursor:
+    #     cursor.execute('')
+
+    # Product.objects.raw('SELECT is, unit_price FROM store_product')
+
+    # cursor.callproc('some_proc', 1, '2', 'hello')
 
     return render(request, 'hello.html')
 
