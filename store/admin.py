@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Tuple
 from django.contrib import admin, messages
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.http import urlencode
@@ -95,12 +95,20 @@ class CommentAdmin(admin.ModelAdmin):
     autocomplete_fields = ['product', ]
 
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    fields = ['product', 'quantity', 'unit_price']
+    extra = 0
+    min_num = 1
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer', 'status', 'datetime_created', 'num_of_items']
     list_editable = ['status']
     list_per_page = 10
     ordering = ['-datetime_created']
+    inlines = [OrderItemInline]
 
     def get_queryset(self, request):
         return super() \
