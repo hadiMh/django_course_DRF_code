@@ -5,7 +5,7 @@ from django.db.models.query import QuerySet
 class Category(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=500, blank=True)
-    top_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
+    top_product = models.ForeignKey('Product', on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
 
     def __str__(self):
         return self.title
@@ -15,6 +15,9 @@ class Category(models.Model):
 class Discount(models.Model):
     discount = models.FloatField()
     description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{str(self.discount)} | {self.description}'
 
 
 class Product(models.Model):
