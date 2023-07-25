@@ -73,7 +73,7 @@ class OrderAdmin(admin.ModelAdmin):
                     items_count=Count('items')
                 )
 
-    @admin.display(ordering='items_count')
+    @admin.display(ordering='items_count', description='# items')
     def num_of_items(self, order):
         return order.items_count
 
