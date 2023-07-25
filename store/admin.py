@@ -1,4 +1,8 @@
+from typing import Any
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.http.request import HttpRequest
+from django.db.models import Count
 
 from .models import Category, Comment, Order, Product
 
@@ -31,9 +35,21 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer', 'status', 'datetime_created']
+    list_display = ['id', 'customer', 'status', 'datetime_created', 'num_of_items']
     list_editable = ['status']
     list_per_page = 10
     ordering = ['-datetime_created']
+
+    def get_queryset(self, request):
+        return super() \
+                .get_queryset(request) \
+                .prefetch_related('items') \
+                .annotate(
+                    items_count=Count('items')
+                )
+
+    @admin.display(ordering='items_count')
+    def num_of_items(self, order):
+        return order.items_count
 
 admin.site.register(Category)
