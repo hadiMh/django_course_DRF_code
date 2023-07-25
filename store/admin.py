@@ -4,7 +4,7 @@ from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
 from django.db.models import Count
 
-from .models import Category, Comment, Order, Product
+from .models import Category, Comment, Customer, Order, Product
 
 
 class InventoryFilter(admin.SimpleListFilter):
@@ -78,3 +78,11 @@ class OrderAdmin(admin.ModelAdmin):
         return order.items_count
 
 admin.site.register(Category)
+
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', ]
+    list_per_page = 10
+    ordering = ['last_name', 'first_name', ]
+    search_fields = ['first_name__istartswith', 'last_name__istartswith', ]
