@@ -16,6 +16,8 @@ class ProductAdmin(admin.ModelAdmin):
             return 'High'
         return 'Medium'
     
+    
+    @admin.display(ordering='category__title')
     def product_category(self, product):
         return product.category.title
     
