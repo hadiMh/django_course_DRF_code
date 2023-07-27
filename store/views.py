@@ -32,12 +32,6 @@ def product_detail(request, pk):
         serializer.is_valid(raise_exception=True)
         serializer.validated_data
         return Response('Everything is OK!')
-        # if serializer.is_valid():
-        #     serializer.validated_data
-        #     return Response('Everything is OK!')
-        # else:
-        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # return Response('All ok!')
 
 
 @api_view()
