@@ -7,31 +7,31 @@ from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
 
 
-@api_view()
-def product_list(request):
-    products_queryset = Product.objects.select_related('category').all()
-    serializer = ProductSerializer(
-        products_queryset, 
-        many=True, 
-        context={'request': request}
-    )
-    return Response(serializer.data)
-
-
 @api_view(['GET', 'POST'])
-def product_detail(request, pk):
+def product_list(request):
     if request.method == 'GET':
-        product = get_object_or_404(
-            Product.objects.select_related('category'),
-            pk=pk
+        products_queryset = Product.objects.select_related('category').all()
+        serializer = ProductSerializer(
+            products_queryset, 
+            many=True, 
+            context={'request': request}
         )
-        serializer = ProductSerializer(product, context={'request': request})
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response('Everything is OK!')
+
+
+@api_view()
+def product_detail(request, pk):
+    product = get_object_or_404(
+        Product.objects.select_related('category'),
+        pk=pk
+    )
+    serializer = ProductSerializer(product, context={'request': request})
+    return Response(serializer.data)
 
 
 @api_view()
