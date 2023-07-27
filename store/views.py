@@ -24,7 +24,7 @@ def product_list(request):
         return Response('Everything is OK!')
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def product_detail(request, pk):
     product = get_object_or_404(
         Product.objects.select_related('category'),
@@ -38,6 +38,11 @@ def product_detail(request, pk):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    elif request.method == 'DELETE':
+        if product.order_items.count() > 0:
+            return Response({'error': 'There is some order items including this product. Please remove them first.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view()
