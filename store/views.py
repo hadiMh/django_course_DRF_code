@@ -29,7 +29,15 @@ def product_detail(request, pk):
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ProductSerializer(data=request.data)
-        return Response('All ok!')
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data
+        return Response('Everything is OK!')
+        # if serializer.is_valid():
+        #     serializer.validated_data
+        #     return Response('Everything is OK!')
+        # else:
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response('All ok!')
 
 
 @api_view()
