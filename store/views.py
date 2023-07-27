@@ -24,14 +24,20 @@ def product_list(request):
         return Response('Everything is OK!')
 
 
-@api_view()
+@api_view(['GET', 'PUT'])
 def product_detail(request, pk):
     product = get_object_or_404(
         Product.objects.select_related('category'),
         pk=pk
     )
-    serializer = ProductSerializer(product, context={'request': request})
-    return Response(serializer.data)
+    if request.method == 'GET':
+        serializer = ProductSerializer(product, context={'request': request})
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ProductSerializer(product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 @api_view()

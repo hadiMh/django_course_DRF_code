@@ -32,3 +32,9 @@ class ProductSerializer(serializers.ModelSerializer):
         product.slug = slugify(product.name)
         product.save()
         return product
+
+
+    # def update(self, instance, validated_data):
+    #     instance.inventory = validated_data.get('inventory')
+    #     instance.save()
+    #     return instance
