@@ -16,7 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = Product
-        fields = ['id', 'title', 'price', 'category', 'unit_price_after_tax']
+        fields = ['id', 'title', 'price', 'category', 'unit_price_after_tax', 'inventory', 'slug', 'description']
     
     def get_unit_price_after_tax(self, product):
         return round(product.unit_price * Decimal(1.09), 2)
