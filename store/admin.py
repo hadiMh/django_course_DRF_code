@@ -1,13 +1,10 @@
-from typing import Any, List, Optional, Tuple
 from django.contrib import admin, messages
-from django.db.models.query import QuerySet
-from django.http.request import HttpRequest
-from django.db.models import Count, Prefetch
-from django.utils.html import format_html
+from django.db.models import Count
 from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.http import urlencode
 
-from .models import Category, Comment, Customer, Order, OrderItem, Product
+from . import models
 
 
 class InventoryFilter(admin.SimpleListFilter):
@@ -33,7 +30,7 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__gt=10)
 
 
-@admin.register(Product)
+@admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'inventory', 'unit_price', 'inventory_status', 'product_category', 'num_of_comments']
     list_per_page = 10
@@ -87,7 +84,7 @@ class ProductAdmin(admin.ModelAdmin):
         )
     
 
-@admin.register(Comment)
+@admin.register(models.Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'product', 'status', ]
     list_editable = ['status']
@@ -96,13 +93,13 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 class OrderItemInline(admin.TabularInline):
-    model = OrderItem
+    model = models.OrderItem
     fields = ['product', 'quantity', 'unit_price']
     extra = 0
     min_num = 1
 
 
-@admin.register(Order)
+@admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer', 'status', 'datetime_created', 'num_of_items']
     list_editable = ['status']
@@ -122,10 +119,10 @@ class OrderAdmin(admin.ModelAdmin):
     def num_of_items(self, order):
         return order.items_count
 
-admin.site.register(Category)
+admin.site.register(models.Category)
 
 
-@admin.register(Customer)
+@admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'email', ]
     list_per_page = 10
@@ -133,7 +130,7 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ['first_name__istartswith', 'last_name__istartswith', ]
 
 
-@admin.register(OrderItem)
+@admin.register(models.OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['order', 'product', 'quantity', 'unit_price']
     autocomplete_fields = ['product', ]

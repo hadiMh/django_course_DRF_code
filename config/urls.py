@@ -25,7 +25,3 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
-
-# codingyar.com/store/
-# codingyar.com/store/a/bcd
-# codingyar.com/store/123
