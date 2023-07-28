@@ -7,8 +7,10 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 
+from .paginations import DefaultPagination
 from .models import Category, Comment, Product
 from .serializers import CategorySerializer, CommentSerializer, ProductSerializer
 from .filters import ProductFilter
@@ -20,6 +22,7 @@ class ProductViewSet(ModelViewSet):
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
     ordering_fields = ['name', 'unit_price', 'inventory']
     search_fields = ['name', 'category__title']
+    # pagination_class = DefaultPagination
     # filterset_fields = ['category_id', 'inventory']
     filterset_class = ProductFilter
 
