@@ -47,3 +47,6 @@ class CommentViewSet(ModelViewSet):
     def get_queryset(self):
         product_pk = self.kwargs['product_pk']
         return Comment.objects.filter(product_id=product_pk).all()
+    
+    def get_serializer_context(self):
+        return {'product_pk': self.kwargs['product_pk']}
