@@ -11,6 +11,7 @@ factory-boy = "*"
 faker = "*"
 djangorestframework = "*"
 drf-nested-routers = "*"
+django-filter = "*"
 
 [dev-packages]
 
