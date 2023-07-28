@@ -10,6 +10,7 @@ mysqlclient = "*"
 factory-boy = "*"
 faker = "*"
 djangorestframework = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
