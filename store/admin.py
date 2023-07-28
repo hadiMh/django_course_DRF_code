@@ -134,3 +134,16 @@ class CustomerAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['order', 'product', 'quantity', 'unit_price']
     autocomplete_fields = ['product', ]
+
+
+class CartItemInline(admin.TabularInline):
+    model = models.CartItem
+    fields = ['id', 'product', 'quantity']
+    extra = 0
+    min_num = 1
+
+
+@admin.register(models.Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['id', 'created_at']
+    inlines = [CartItemInline]
