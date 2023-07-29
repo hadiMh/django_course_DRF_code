@@ -7,12 +7,12 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, DjangoModelPermissions
 
 from .models import Cart, CartItem, Category, Comment, Customer, Product
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
-from .permissions import IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
+from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
 
 class ProductViewSet(ModelViewSet):
@@ -24,6 +24,7 @@ class ProductViewSet(ModelViewSet):
     # pagination_class = DefaultPagination
     # filterset_fields = ['category_id', 'inventory']
     filterset_class = ProductFilter
+    permission_classes = [CustomDjangoModelPermissions]
 
     def get_serializer_context(self):
         return {'request': self.request}
