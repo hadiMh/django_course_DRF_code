@@ -11,9 +11,10 @@ from django.db.models import Prefetch
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, DjangoModelPermissions
 
 from .models import Cart, CartItem, Category, Comment, Customer, Order, OrderItem, Product
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, OrderCreateSerializer, OrderForAdminSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, OrderCreateSerializer, OrderForAdminSerializer, OrderSerializer, OrderUpdateSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
+from .signals import order_created
 
 
 class ProductViewSet(ModelViewSet):
@@ -139,6 +140,9 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return OrderCreateSerializer
+        
+        if self.request.method == 'PATCH':
+            return OrderUpdateSerializer
 
         if self.request.user.is_staff:
             return OrderForAdminSerializer
@@ -152,6 +156,8 @@ class OrderViewSet(ModelViewSet):
         )
         create_order_serializer.is_valid(raise_exception=True)
         created_order = create_order_serializer.save()
+
+        order_created.send_robust(self.__class__, order=created_order)
 
         serializer = OrderSerializer(created_order)
         return Response(serializer.data)

@@ -159,6 +159,12 @@ class OrderForAdminSerializer(serializers.ModelSerializer):
         fields = ['id', 'customer', 'status', 'datetime_created', 'items']
 
 
+class OrderUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+
 class OrderCreateSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField()
 
