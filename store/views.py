@@ -11,7 +11,7 @@ from django.db.models import Prefetch
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, DjangoModelPermissions
 
 from .models import Cart, CartItem, Category, Comment, Customer, Order, OrderItem, Product
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, OrderForAdminSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
@@ -114,13 +114,24 @@ class CustomerViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
-    serializer_class = OrderSerializer
-    # queryset = Order.objects.prefetch_related('items').all()
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        return Order.objects.prefetch_related(
+        queryset = Order.objects.prefetch_related(
             Prefetch(
                 'items',
                 queryset=OrderItem.objects.select_related('product'),
             )
         ).select_related('customer__user').all()
+
+        user = self.request.user
+
+        if user.is_staff:
+            return queryset
+        
+        return queryset.filter(customer__user_id=user.id)
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return OrderForAdminSerializer
+        return OrderSerializer
