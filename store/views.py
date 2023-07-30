@@ -7,10 +7,11 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Prefetch
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, DjangoModelPermissions
 
-from .models import Cart, CartItem, Category, Comment, Customer, Product
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, ProductSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Category, Comment, Customer, Order, OrderItem, Product
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
@@ -110,3 +111,16 @@ class CustomerViewSet(ModelViewSet):
     @action(detail=True, permission_classes=[SendPrivateEmailToCustomerPermission])
     def send_private_email(self, request, pk):
         return Response(f'Sending email to customer {pk=}')
+
+
+class OrderViewSet(ModelViewSet):
+    serializer_class = OrderSerializer
+    # queryset = Order.objects.prefetch_related('items').all()
+    
+    def get_queryset(self):
+        return Order.objects.prefetch_related(
+            Prefetch(
+                'items',
+                queryset=OrderItem.objects.select_related('product'),
+            )
+        ).select_related('customer__user').all()
